@@ -7,3 +7,6 @@ gunicorn==20.1.0
 python-dotenv==1.0.0
 scikit-learn==1.2.2
 werkzeug==2.2.3
+boto3==1.26.0  # For AWS S3
+SQLAlchemy==2.0.0  # For PostgreSQL
+psycopg2-binary==2.9.5  # PostgreSQL adapter
