@@ -4,13 +4,20 @@ from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import pandas as pd
 import os
 
 # Configuração do Dataset
-DATASET_DIR = "data/**"  # Update do dataset
+DATASET_DIR = "Downloads/archive/train_images/"  # Atualize para o caminho correto
+CSV_PATH = "Downloads/archive/train.csv"  # Caminho do arquivo de labels
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
 EPOCHS = 10
+
+# Carregar labels do CSV
+df = pd.read_csv(CSV_PATH)
+df['image'] = df['image_id'] + '.jpg'  # Adicionar extensão .jpg
+df['label'] = df.iloc[:, 1:].idxmax(axis=1)  # Pegar a classe com maior probabilidade
 
 # Pre-processamento de dados
 train_datagen = ImageDataGenerator(
@@ -22,16 +29,22 @@ train_datagen = ImageDataGenerator(
     validation_split=0.2
 )
 
-train_generator = train_datagen.flow_from_directory(
-    DATASET_DIR,
+train_generator = train_datagen.flow_from_dataframe(
+    dataframe=df,
+    directory=DATASET_DIR,
+    x_col='image',
+    y_col='label',
     target_size=IMG_SIZE,
     batch_size=BATCH_SIZE,
     class_mode='categorical',
     subset='training'
 )
 
-validation_generator = train_datagen.flow_from_directory(
-    DATASET_DIR,
+validation_generator = train_datagen.flow_from_dataframe(
+    dataframe=df,
+    directory=DATASET_DIR,
+    x_col='image',
+    y_col='label',
     target_size=IMG_SIZE,
     batch_size=BATCH_SIZE,
     class_mode='categorical',
@@ -46,7 +59,7 @@ x = Dense(128, activation='relu')(x)
 predictions = Dense(train_generator.num_classes, activation='softmax')(x)
 model = Model(inputs=base_model.input, outputs=predictions)
 
-# base congelada layers
+# Congelar camadas base
 for layer in base_model.layers:
     layer.trainable = False
 
@@ -63,6 +76,6 @@ model.fit(
 # Salvar Modelo
 model.save("model/plant_disease_model.h5")
 
-# Salver Nome das Classes
+# Salvar Nome das Classes
 with open("model/class_names.txt", "w") as f:
     f.write("\n".join(train_generator.class_indices.keys()))
