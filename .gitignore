@@ -1,0 +1,63 @@
+# Model
+app/model/plant_disease_model.h5
+
+# Ambientes virtuais
+.venv/
+env/
+venv/
+
+# Bytecode Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Informações de build/distribuição
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Dados de configuração/local
+.python-version
+.env
+.env.*
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+
+# Configurações de IDE/editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Arquivos do sistema macOS
+.DS_Store
+
+# Cachê do pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Arquivos de cobertura de testes
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+
+# Instâncias Flask
+instance/
+
+# Arquivos de database SQLite
+*.sqlite3
+
+# PyInstaller
+*.spec
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Cython debug symbols
+cython_debug/
